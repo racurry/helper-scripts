@@ -5,7 +5,6 @@ require 'shellwords'
 IGNORED_FILES = %w{.DS_Store .. .}
 
 def convert_file(file)
-  # file_name = Shellwords.escape(file)
   file_name_with_no_extension = file.split('.')[0...-1].join
 
   if File.exists?("#{file_name_with_no_extension}.mkv")

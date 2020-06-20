@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'shellwords'
+
+IGNORED_FILES = %w{.DS_Store .. .}
+
+def change_file_extensions(current_extension, new_extension)
+  unless current_extension && new_extension
+    puts "Nope.  You gotta gimme the current and new extensions"
+    return
+  end
+
+  matching_files = Dir["./*.#{current_extension}"]
+
+  if matching_files.empty?
+    puts "Nuh uh.  There aren't any #{current_extension} files in this directory"
+    return
+  end
+
+  command = "for file in *.#{current_extension}; do mv \"$file\" \"${file%.#{current_extension}}.#{new_extension}\"; done"
+  system(command)
+  puts "Done.  Converted #{matching_files.count} files"
+end
+
+current_extension, new_extension = *ARGV
+change_file_extensions(current_extension, new_extension)
