@@ -11,6 +11,10 @@ def merge(filepaths, outputfile)
   file_list = filepaths.map{ |x| Shellwords.escape(x) }.join(' ')
   system("cat #{file_list} > #{temp_filename}")
   system("ffmpeg -i #{temp_filename} -vcodec copy -acodec copy #{Shellwords.escape(outputfile)}.mp4")
+  system("rm #{temp_filename}")
+  filepaths.each do |x|
+    system("rm #{Shellwords.escape(x)}")
+  end
 end
 
 all_args = ARGV
