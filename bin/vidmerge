@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'shellwords'
+
+IGNORED_FILES = %w{.DS_Store .. .}
+
+TEMPFILE='temp'
+
+def merge(filepaths, outputfile)
+  temp_filename = "#{TEMPFILE}#{File.extname(filepaths.first)}"
+  file_list = filepaths.map{ |x| Shellwords.escape(x) }.join(' ')
+  system("cat #{file_list} > #{temp_filename}")
+  system("ffmpeg -i #{temp_filename} -vcodec copy -acodec copy #{Shellwords.escape(outputfile)}.mp4")
+end
+
+all_args = ARGV
+outputfile = all_args.pop
+merge(all_args, outputfile)
