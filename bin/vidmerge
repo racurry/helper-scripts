@@ -6,17 +6,31 @@ IGNORED_FILES = %w{.DS_Store .. .}
 
 TEMPFILE='temp'
 
-def merge(filepaths, outputfile)
-  temp_filename = "#{TEMPFILE}#{File.extname(filepaths.first)}"
-  file_list = filepaths.map{ |x| Shellwords.escape(x) }.join(' ')
+def merge(filepaths, outputfile, delete_originals=false)
+
+  # Figure out if we have a directory, or a bunch of file names
+  if File.directory?(filepaths.first)
+    puts "Looks like we're combining a directory.  I hope the files are in order."
+    filenames = (Dir.entries(filepaths.first) - IGNORED_FILES).map { |x| "#{filepaths.first}/#{x}"}
+  else
+    filenames = filepaths
+  end
+
+  temp_filename = Shellwords.escape("#{TEMPFILE}#{File.extname(filepaths.first)}")
+  file_list = filenames.sort.map{ |x| Shellwords.escape(x) }.join(' ')
+  puts "Here we go, merging #{file_list}"
   system("cat #{file_list} > #{temp_filename}")
   system("ffmpeg -i #{temp_filename} -vcodec copy -acodec copy #{Shellwords.escape(outputfile)}.mp4")
   system("rm #{temp_filename}")
-  filepaths.each do |x|
-    system("rm #{Shellwords.escape(x)}")
+
+  if delete_originals
+    filepaths.each do |x|
+      system("rm -rf #{Shellwords.escape(x)}")
+    end
   end
 end
 
 all_args = ARGV
+delete_originals_param = all_args.delete('-d')
 outputfile = all_args.pop
-merge(all_args, outputfile)
+merge(all_args, outputfile, !delete_originals_param.nil?)

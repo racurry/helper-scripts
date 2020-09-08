@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'shellwords'
+
+IGNORED_FILES = %w{.DS_Store .. .}
+
+TEMPFILE='temp'
+
+def rename(directory, desired_filename)
+
+  unless File.directory?(directory)
+    puts "Fuck off, this isn't a directory name"
+    return
+  end
+
+  filenames = (Dir.entries(directory) - IGNORED_FILES).map { |file| "#{directory}/#{file}"}
+  filenames.each_with_index do |existing_file, index|
+    file_extension = existing_file.split('.').last
+    new_file_name = "#{directory}/#{desired_filename}#{index+1}.#{file_extension}"
+    puts "Renaming #{existing_file} to #{new_file_name}"
+    system("mv #{Shellwords.escape(existing_file)} #{Shellwords.escape(new_file_name)}")
+  end
+end
+
+directory, desired_filename = ARGV
+rename(directory, desired_filename)
