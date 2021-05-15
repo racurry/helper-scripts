@@ -40,3 +40,10 @@ Rename all of the files in a given directory.  Gives them all the same name, plu
 batch_rename directory_name "File name prefix"
 ```
 
+## folderify
+Take a directory of files.  For each file, make a folder of the same name.  Move that file into that folder.
+
+```
+folderify directory_name
+```
+
