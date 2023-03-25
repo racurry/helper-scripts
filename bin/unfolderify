@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+
+require 'shellwords'
+
+system(Shellwords.escape("mv ./*/**/*(.D) ."))
+# system(Shellwords.escape("rm -rf ./*/"))
