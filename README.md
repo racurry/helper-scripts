@@ -47,3 +47,20 @@ Take a directory of files.  For each file, make a folder of the same name.  Move
 folderify directory_name
 ```
 
+## ccmcps
+Manage Claude Code CLI MCP servers - quickly enable/disable them to save context when not needed.
+
+```
+ccmcps                         # Show current server status (default)
+ccmcps status                  # Show enabled/disabled server status
+ccmcps list                    # Show detailed server list (raw claude mcp list output)
+ccmcps disable                 # Disable all MCP servers
+ccmcps disable server_name     # Disable specific server
+ccmcps enable                  # Enable all previously disabled servers
+ccmcps enable server_name      # Enable specific server
+```
+
+The script automatically backs up server configurations when disabling them (stored in `~/.claude_mcp_backup.json`) so they can be easily restored later with the same settings.
+
+Requires Claude Code CLI (`claude` command)
+
